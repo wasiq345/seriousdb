@@ -38,12 +38,18 @@ def put(
 
 
 @app.get("/db")
-def get(key: str, cache: Annotated[Cache, Depends(get_cache)]) -> str:
+def get(
+    key: Annotated[str, Query(min_length=1)],
+    cache: Annotated[Cache, Depends(get_cache)],
+) -> str:
     return cache.select(key)
 
 
 @app.head("/db")
-async def head(key: str, cache: Annotated[Cache, Depends(get_cache)]) -> str:
+async def head(
+    key: Annotated[str, Query(min_length=1)],
+    cache: Annotated[Cache, Depends(get_cache)],
+) -> str:
     return cache.select(key)
 
 
@@ -55,7 +61,7 @@ def get_all(cache: Annotated[Cache, Depends(get_cache)]) -> dict[str, str]:
 
 @app.delete("/db")
 def delete(
-    key: str,
+    key: Annotated[str, Query(min_length=1)],
     background_tasks: BackgroundTasks,
     cache: Annotated[Cache, Depends(get_cache)],
 ):

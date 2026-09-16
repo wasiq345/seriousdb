@@ -88,6 +88,14 @@ def test_put_empty_key_returns_422(client):
     assert response.status_code == 422
 
 
+# Exercise every key-based endpoint with the same empty-key input.
+@pytest.mark.parametrize("method", ["get", "head", "delete"])
+def test_empty_key_returns_422_for_key_endpoints(client, method):
+    response = getattr(client, method)("/db", params={"key": ""})
+
+    assert response.status_code == 422
+
+
 def test_put_missing_key_returns_422(client):
     response = client.put(
         "/db",
